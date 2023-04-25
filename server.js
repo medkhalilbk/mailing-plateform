@@ -1,10 +1,8 @@
-const express = require('express');
-const fileUpload = require('express-fileupload');
+const express = require('express'); 
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const _ = require('lodash');
-const router = require('./routes');
+const _ = require('lodash'); 
 
 const app = express();
 
