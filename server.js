@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const _ = require('lodash'); 
-
+const router = require('./routes')
 const app = express();
 
 // enable files upload 
