@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const _ = require('lodash'); 
 const router = require('./routes')
 const app = express();
+require('dotenv').config()
 
 // enable files upload 
 
@@ -13,17 +14,27 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('dev'));
-app.use('/mailing',router)
+const jwt = require('jsonwebtoken')
+const bcrypt = require("bcrypt")
+const dotenv = require('dotenv')
+dotenv.config()
+
 //start app 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT ;
 
  
+
 app.get('/', (req, res) => {
   res.send('Hello World 2!')
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+app.use('/mailing',router)
+app.listen(port, async () => {
+  try { 
+  console.log(`port : ${process.env.PORT}`)
+  } catch (error) {
+    console.log(error)
+  }
 })
 
  
