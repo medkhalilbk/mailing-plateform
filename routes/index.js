@@ -83,8 +83,9 @@ router.post("/login", async function (req, res) {
     console.log(req.body)
     const login = await  Auth({user:req.body.username,password:req.body.password})
     if(!login.token){
-      return res.status(500).send({"error":login})
+      return res.status(500).send('error') 
     }
+    console.log(login)
     return res.status(200).send(login)
   } catch (error) {
     res.status(401).json(error)
