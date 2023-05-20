@@ -24,8 +24,8 @@ try {
         const token = jwt.sign( {user:user}, process.env.pass, { expiresIn: 60 * 15});
 
         return {
-            user:"admin",
-            id:1,
+            user: "admin",
+            id:1 ,    
             token: token
         }
     }

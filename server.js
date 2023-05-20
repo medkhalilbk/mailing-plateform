@@ -13,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 const { readMailist } = require('./operations/readlist');
+const { connectDB } = require('./services/DB');
 const filePath = "./list.csv";
 
 // Start app
@@ -26,6 +27,7 @@ app.use('/mailing', router);
 
 app.listen(port, async () => {
   try {
+    const connect = await connectDB()
     console.log(`Server started on port: ${port}`);
  /*    const mailist = await readMailist(filePath);
     console.log(mailist); */
@@ -41,14 +43,14 @@ app.listen(port, async () => {
       email += '@example.com';
       return email;
     }
-    let records = []
+/*     let records = []
     for (let i = 0; i < 100; i++) {
       const email = generateRandomEmail();
       records.push({ email: email });
     }
     records.forEach(e => {
       console.log(e.email+",")
-    })
+    }) */
 
   } catch (error) {
     console.log(error);

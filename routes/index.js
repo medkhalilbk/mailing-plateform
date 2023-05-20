@@ -12,6 +12,8 @@ const multer = require('multer');
 const CsvReadableStream = require('csv-reader');
 const { uniqueId, random } = require("lodash");  
 const { readSingleFile, getEmailArray } = require("../operations/readfile");
+const { mailistModel } = require("../models/mailist");
+const { default: mongoose } = require("mongoose");
 // Set up multer storage configuration
 let newFileName ; 
 const storage = multer.diskStorage({
@@ -32,17 +34,18 @@ const upload = multer({
   
 });
 
-router.post('/import',middlware, upload.single('recfile'), function (req, res) {
+router.post('/import',middlware, upload.single('recfile'), async function (req, res) {
   // Access the uploaded file using req.file
  try {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
-
-  // Read the CSV file
+ 
   const inputStream = fs.createReadStream(req.file.path, 'utf8');
-  const mails = [];
-
+  const mails =[];  
+  console.log(req.body)
+  const mailist = new mailistModel({name:newFileName,userID:{} , label:req.body.label})
+  const saveMailist = await mailist.save()
   inputStream
     .pipe(new CsvReadableStream({ parseNumbers: true, parseBooleans: true, trim: true }))
     .on('data', function (row) {
@@ -63,8 +66,10 @@ router.post('/import',middlware, upload.single('recfile'), function (req, res) {
 router.get('/:listId', middlware ,async function (req,res) {
 try {
   if(req.params.listId){
-    let emails = await readSingleFile(req.params.listId)
-    return res.send({mails:getEmailArray(emails)})
+    let mails = await mongoose.model('mailist').findOne({label:req.params.listId})
+    console.log(mails)
+    let emails = await readSingleFile(mails.name)
+    return res.send({infos:mails ,mails:getEmailArray(emails)})
  }else{
   return res.status(500).send({error:message})
  }
@@ -75,9 +80,10 @@ try {
 } )
 router.post("/login", async function (req, res) {
   try {   
+    console.log(req.body)
     const login = await  Auth({user:req.body.username,password:req.body.password})
     if(!login.token){
-      return res.status(401).send({"error":login})
+      return res.status(500).send({"error":login})
     }
     return res.status(200).send(login)
   } catch (error) {
