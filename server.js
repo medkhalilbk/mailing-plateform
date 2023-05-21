@@ -14,6 +14,7 @@ app.use(morgan('dev'));
 
 const { readMailist } = require('./operations/readlist');
 const { connectDB } = require('./services/DB');
+const { sendEmail } = require('./operations/sendMail');
 const filePath = "./list.csv";
 
 // Start app
@@ -29,6 +30,7 @@ app.listen(port, async () => {
   try {
     const connect = await connectDB()
     console.log(`Server started on port: ${port}`);
+    const send = await sendEmail('medkhalilbenkhelil@gmail.com','test aws') ; 
  /*    const mailist = await readMailist(filePath);
     console.log(mailist); */
     function generateRandomEmail() {
