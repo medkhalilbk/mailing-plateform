@@ -36,11 +36,21 @@ const upload = multer({
 
 router.post('/import',middlware, upload.single('recfile'), async function (req, res) {
   // Access the uploaded file using req.file
+  if (!req.file && req.body) { 
+    const collectionWithoutName = await mailistModel.create({name:req.body.name, userId:null})
+ 
+  return res.status(200).json({mailistId:(collectionWithoutName)})
+  }
  try {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
-  }
  
+  }
+
+
+
+
+
   const inputStream = fs.createReadStream(req.file.path, 'utf8');
   const mails =[];  
   console.log(req.body)
